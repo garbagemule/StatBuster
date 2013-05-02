@@ -1,0 +1,512 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="StatBuster.lua" />
+    <Frame name="SB_TotalsItem" virtual="true">
+        <Size x="420" y="16" />
+        <Anchors>
+            <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                <Offset x="32" />
+            </Anchor>
+            <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT">
+                <Offset x="-32" />
+            </Anchor>
+        </Anchors>
+        <Layers>
+            <Layer level="OVERLAY">
+                <Texture name="$parentTex" parentKey="tex" hidden="true">
+                    <Size x="12" y="12" />
+                    <Anchors>
+                        <Anchor point="LEFT" relativePoint="LEFT" />
+                    </Anchors>
+                </Texture>
+                <FontString name="$parentStat" inherits="GameFontNormal" parentKey="stat" justifyH="LEFT">
+                    <Size x="120" y="14" />
+                    <Anchors>
+                        <Anchor point="LEFT" relativePoint="LEFT" />
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentDiff" inherits="GameFontNormal" parentKey="diff" justifyH="RIGHT">
+                    <Size x="50" y="14" />
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentStat" relativePoint="RIGHT" />
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentLeft" inherits="GameFontNormal" parentKey="left" justifyH="RIGHT">
+                    <Size x="50" y="14" />
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentDiff" relativePoint="RIGHT" />
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentRight" inherits="GameFontNormal" parentKey="right" justifyH="RIGHT">
+                    <Size x="50" y="14" />
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT" />
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentPercent" inherits="GameFontNormal" parentKey="percent" justifyH="RIGHT">
+                    <Size x="50" y="14" />
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentRight" relativePoint="RIGHT" />
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+    <Frame name="SB_ListItem" virtual="true">
+        <Size x="200" y="20" />
+        <Anchors>
+            <Anchor point="TOPLEFT" relativePoint="TOPLEFT" />
+            <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT">
+                <Offset x="-30" />
+            </Anchor>
+        </Anchors>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentName" inherits="GameFontNormal" parentKey="name" text="[ITEM]" justifyH="LEFT">
+                    <Size x="161" y="20" />
+                    <Anchors>
+                        <Anchor point="LEFT" relativePoint="LEFT">
+                            <Offset x="36" y="1" />
+                        </Anchor>
+                        <Anchor point="RIGHT" relativePoint="RIGHT">
+                            <Offset x="-3" y="1" />
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentRemove" inherits="UIPanelCloseButton" parentKey="remove">
+                <Size x="24" y="24" />
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parent" relativePoint="LEFT" />
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        SB_ListItemRemove_OnClick(self)
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <CheckButton name="$parentCheck" inherits="UICheckButtonTemplate" parentKey="check" checked="true">
+                <Size x="21" y="21" />
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parentRemove" relativePoint="RIGHT">
+                        <Offset x="-6" />
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <PostClick>
+                        SB_ListItemCheck_OnClick(self)
+                    </PostClick>
+                </Scripts>
+            </CheckButton>
+        </Frames>
+        <Scripts>
+            <OnEnter>
+                SB_ListItem_OnEnter(self)
+            </OnEnter>
+            <OnLeave>
+                SB_ListItem_OnLeave(self)
+            </OnLeave>
+        </Scripts>
+    </Frame>
+    <Frame name="SB_MainFrame" setAllPoints="true" parent="UIParent" toplevel="true" movable="true" enableMouse="true">
+        <Size x="556" y="437" />
+        <Anchors>
+            <Anchor point="CENTER">
+                <Offset y="11" />
+            </Anchor>
+        </Anchors>
+        <TitleRegion>
+            <Size x="300" y="68" />
+            <Anchors>
+                <Anchor point="TOP">
+                    <Offset y="30" />
+                </Anchor>
+            </Anchors>
+        </TitleRegion>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+            <BackgroundInsets left="12" right="12" top="12" bottom="11" />
+            <TileSize val="32" />
+            <EdgeSize val="32" />
+        </Backdrop>
+        <Layers>
+            <Layer>
+                <Texture name="HeaderTexture" file="Interface\DialogFrame\UI-DialogBox-Header">
+                    <Size x="300" y="68" />
+                    <Anchors>
+                        <Anchor point="TOP" relativeTo="SB_MainFrame" relativePoint="TOP">
+                            <Offset y="12" />
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <FontString name="HeaderString" inherits="GameFontNormal" text="StatBuster">
+                    <Anchors>
+                        <Anchor point="TOP" relativeTo="HeaderTexture" relativePoint="TOP" />
+                        <Anchor point="BOTTOM" relativeTo="HeaderTexture" relativePoint="BOTTOM">
+                            <Offset y="24" />
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame name="SB_LeftPanel">
+                <Size x="257" y="170" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="SB_MainFrame" relativePoint="TOPLEFT">
+                        <Offset x="16" y="-33" />
+                    </Anchor>
+                    <Anchor point="TOPRIGHT" relativeTo="SB_MainFrame" relativePoint="TOP" x="-5" y="-33" />
+                </Anchors>
+                <Backdrop bgFile="" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+                    <BackgroundInsets left="5" right="5" top="5" bottom="5" />
+                    <TileSize>
+                        <AbsValue val="32" />
+                    </TileSize>
+                    <EdgeSize val="16" />
+                </Backdrop>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="SB_LeftHeader" inherits="GameFontNormal" text="Original Set" justifyH="LEFT">
+                            <Size y="32" />
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset x="12" y="-5" />
+                                </Anchor>
+                                <Anchor point="TOPRIGHT">
+                                    <Offset x="-5" y="-5" />
+                                </Anchor>
+                            </Anchors>
+                            <FontHeight val="14" />
+                        </FontString>
+                        <FontString name="LeftDesc" inherits="GameFontNormal" font="Fonts\FRIENDS.TTF" text="Ctrl+LeftClick to add items here">
+                            <Size y="12" />
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativeTo="SB_LeftPanel" relativePoint="BOTTOMLEFT" />
+                                <Anchor point="TOPRIGHT" relativeTo="SB_LeftPanel" relativePoint="BOTTOMRIGHT" />
+                            </Anchors>
+                            <FontHeight val="10" />
+                            <Color r="0.502" g="0.502" b="0.502" />
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Frame name="SB_LeftItems">
+                        <Size x="250" y="120" />
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="SB_LeftHeader" relativePoint="BOTTOMLEFT">
+                                <Offset x="-7" y="-5" />
+                            </Anchor>
+                            <Anchor point="TOPRIGHT" relativeTo="SB_LeftHeader" relativePoint="BOTTOMRIGHT">
+                                <Offset y="-5" />
+                            </Anchor>
+                        </Anchors>
+                        <Frames>
+                            <Slider name="SB_LeftScroller" inherits="UIPanelScrollBarTemplate" minValue="1" maxValue="1" defaultValue="1" valueStep="1">
+                                <Size x="20" y="82" />
+                                <Anchors>
+                                    <Anchor point="TOPRIGHT">
+                                        <Offset x="-2" y="-20" />
+                                    </Anchor>
+                                </Anchors>
+                                <Scripts>
+                                    <OnValueChanged>
+                                        SB_LeftScroller_OnValueChanged(self)
+                                    </OnValueChanged>
+                                </Scripts>
+                            </Slider>
+                            <Frame name="SB_L1" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_LeftItems" relativePoint="TOPLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_L2" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_L1" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_L3" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_L2" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_L4" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_L3" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_L5" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_L4" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_L6" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_L5" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                        </Frames>
+                    </Frame>
+                </Frames>
+            </Frame>
+            <Frame name="SB_RightPanel">
+                <Size x="257" y="170" />
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="SB_MainFrame" relativePoint="TOPRIGHT">
+                        <Offset x="-16" y="-33" />
+                    </Anchor>
+                    <Anchor point="TOPLEFT" relativeTo="SB_MainFrame" relativePoint="TOP">
+                        <Offset x="5" y="-33" />
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+                    <BackgroundInsets left="5" right="5" top="5" bottom="5" />
+                    <TileSize val="32" />
+                    <EdgeSize val="16" />
+                </Backdrop>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="SB_RightHeader" inherits="GameFontNormal" text="Replacement Set" justifyH="LEFT">
+                            <Size y="32" />
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset x="12" y="-5" />
+                                </Anchor>
+                                <Anchor point="TOPRIGHT">
+                                    <Offset x="-5" y="-5" />
+                                </Anchor>
+                            </Anchors>
+                            <FontHeight val="14" />
+                        </FontString>
+                        <FontString name="RightDesc" inherits="GameFontNormal" font="Fonts\FRIENDS.TTF" text="Ctrl+RightClick to add items here">
+                            <Size y="12" />
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativeTo="SB_RightPanel" relativePoint="BOTTOMLEFT" />
+                                <Anchor point="TOPRIGHT" relativeTo="SB_RightPanel" relativePoint="BOTTOMRIGHT" />
+                            </Anchors>
+                            <FontHeight val="10" />
+                            <Color r="0.502" g="0.502" b="0.502" />
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Frame name="SB_RightItems">
+                        <Size x="240" y="120" />
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="SB_RightHeader" relativePoint="BOTTOMLEFT">
+                                <Offset x="-7" y="-5" />
+                            </Anchor>
+                            <Anchor point="TOPRIGHT" relativeTo="SB_RightHeader" relativePoint="BOTTOMRIGHT">
+                                <Offset y="-5" />
+                            </Anchor>
+                        </Anchors>
+                        <Frames>
+                            <Slider name="SB_RightScroller" inherits="UIPanelScrollBarTemplate" minValue="1" maxValue="1" defaultValue="1" valueStep="1">
+                                <Size x="20" y="82" />
+                                <Anchors>
+                                    <Anchor point="TOPRIGHT">
+                                        <Offset x="-2" y="-20" />
+                                    </Anchor>
+                                </Anchors>
+                                <Scripts>
+                                    <OnValueChanged>
+                                        SB_RightScroller_OnValueChanged(self)
+                                    </OnValueChanged>
+                                </Scripts>
+                            </Slider>
+                            <Frame name="SB_R1" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_RightItems" relativePoint="TOPLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_R2" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_R1" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_R3" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_R2" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_R4" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_R3" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_R5" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_R4" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_R6" inherits="SB_ListItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_R5" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                        </Frames>
+                    </Frame>
+                </Frames>
+            </Frame>
+            <Frame name="SB_TotalsPanel">
+                <Size y="170" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="SB_LeftPanel" relativePoint="BOTTOMLEFT">
+                        <Offset y="-23" />
+                    </Anchor>
+                    <Anchor point="TOPRIGHT" relativeTo="SB_RightPanel" relativePoint="BOTTOMRIGHT">
+                        <Offset y="-23" />
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+                    <BackgroundInsets left="5" right="5" top="5" bottom="5" />
+                    <TileSize>
+                        <AbsValue val="32" />
+                    </TileSize>
+                    <EdgeSize val="16" />
+                </Backdrop>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="SB_TotalsStat" inherits="GameFontNormal" text="Stat" justifyH="LEFT">
+                            <Size x="120" y="32" />
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset x="12" y="-5" />
+                                </Anchor>
+                            </Anchors>
+                            <FontHeight val="12" />
+                        </FontString>
+                        <FontString name="SB_TotalsDiff" inherits="GameFontNormal" text="Diff" justifyH="RIGHT">
+                            <Size x="50" y="32" />
+                            <Anchors>
+                                <Anchor point="LEFT" relativeTo="SB_TotalsStat" relativePoint="RIGHT" />
+                            </Anchors>
+                            <FontHeight val="12" />
+                        </FontString>
+                        <FontString name="SB_TotalsLeft" inherits="GameFontNormal" text="Old" justifyH="RIGHT">
+                            <Size x="50" y="32" />
+                            <Anchors>
+                                <Anchor point="LEFT" relativeTo="SB_TotalsDiff" relativePoint="RIGHT" />
+                            </Anchors>
+                            <FontHeight val="12" />
+                        </FontString>
+                        <FontString name="SB_TotalsRight" inherits="GameFontNormal" text="New" justifyH="RIGHT">
+                            <Size x="50" y="32" />
+                            <Anchors>
+                                <Anchor point="LEFT" relativeTo="SB_TotalsLeft" relativePoint="RIGHT" />
+                            </Anchors>
+                            <FontHeight val="12" />
+                        </FontString>
+                        <FontString name="SB_TotalsPercent" inherits="GameFontNormal" text="%" justifyH="RIGHT">
+                            <Size x="50" y="32" />
+                            <Anchors>
+                                <Anchor point="LEFT" relativeTo="SB_TotalsRight" relativePoint="RIGHT" />
+                            </Anchors>
+                            <FontHeight val="12" />
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Frame name="SB_Totals">
+                        <Size y="127" />
+                        <Anchors>
+                            <Anchor point="BOTTOMLEFT">
+                                <Offset x="5" y="5" />
+                            </Anchor>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset x="-5" y="5" />
+                            </Anchor>
+                        </Anchors>
+                        <Frames>
+                            <Slider name="SB_TotalsScroller" inherits="UIPanelScrollBarTemplate" minValue="1" maxValue="1" defaultValue="1" valueStep="1">
+                                <Size x="20" />
+                                <Anchors>
+                                    <Anchor point="TOPRIGHT">
+                                        <Offset x="-2" y="-20" />
+                                    </Anchor>
+                                    <Anchor point="BOTTOMRIGHT">
+                                        <Offset x="-2" y="20" />
+                                    </Anchor>
+                                </Anchors>
+                                <Scripts>
+                                    <OnValueChanged>
+                                        SB_TotalsScroller_OnValueChanged(self)
+                                    </OnValueChanged>
+                                </Scripts>
+                            </Slider>
+                            <Frame name="SB_T1" inherits="SB_TotalsItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_Totals" relativePoint="TOPLEFT">
+                                        <Offset x="8" />
+                                    </Anchor>
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_T2" inherits="SB_TotalsItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_T1" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_T3" inherits="SB_TotalsItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_T2" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_T4" inherits="SB_TotalsItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_T3" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_T5" inherits="SB_TotalsItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_T4" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_T6" inherits="SB_TotalsItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_T5" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_T7" inherits="SB_TotalsItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_T6" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame name="SB_T8" inherits="SB_TotalsItem" hidden="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="SB_T7" relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                        </Frames>
+                    </Frame>
+                </Frames>
+            </Frame>
+            <CheckButton name="SB_Zeroes" inherits="UICheckButtonTemplate">
+                <Size x="23" y="23" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="SB_TotalsPanel" relativePoint="BOTTOMLEFT" />
+                </Anchors>
+                <Scripts>
+                    <PostClick>
+                        SB_ZeroesCheck_OnClick(self)
+                    </PostClick>
+                </Scripts>
+            </CheckButton>
+            <Button name="SB_Close" inherits="UIPanelButtonTemplate" text="Close">
+                <Size x="74" y="23" />
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="SB_TotalsPanel" relativePoint="BOTTOMRIGHT" />
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        SB_Close_OnClick()
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                SB_MainFrame_OnLoad(self)
+            </OnLoad>
+        </Scripts>
+    </Frame>
+</Ui>

@@ -1,0 +1,7 @@
+## Interface: 30300
+## Title: StatBuster
+## Notes: Arbitrary item set comparison
+## Version: 1.1
+## Author: Duck
+
+StatBuster.xml
